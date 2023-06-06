@@ -1,0 +1,37 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+csv_filename = "tv_shows_data.csv"
+df = pd.read_csv(csv_filename)
+season_ratings = df.groupby('Season')['Rating'].mean().reset_index()
+plt.plot(season_ratings['Season'], season_ratings['Rating'], marker='o')
+plt.xlabel('Season')
+plt.ylabel('Average Rating')
+plt.title('Average Ratings for Each Season')
+plt.show()
+highly_rated_episodes = df.groupby(['Season', 'Episode'])['Rating'].mean().reset_index()
+highly_rated_episodes = highly_rated_episodes[highly_rated_episodes['Rating'] > 8]
+episodes_before_may_2019 = df[df['Air Date'] < '2019-05']
+highest_rating_episodes = df.groupby('Season')['Rating'].idxmax()
+lowest_rating_episodes = df.groupby('Season')['Rating'].idxmin()
+highest_rating_episodes_info = df.loc[highest_rating_episodes, ['Season', 'Episode', 'Rating']]
+lowest_rating_episodes_info = df.loc[lowest_rating_episodes, ['Season', 'Episode', 'Rating']]
+most_popular_episodes = df.groupby('Season')['Rating'].idxmax()
+most_popular_episodes_summary = df.loc[most_popular_episodes, ['Season', 'Episode', 'Summary']]
+
+print("Average Ratings for Each Season:")
+print(season_ratings)
+
+print("\nEpisode Names with Average Rating > 8 for Every Season:")
+print(highly_rated_episodes)
+
+print("\nEpisode Names Aired Before May 2019:")
+print(episodes_before_may_2019)
+
+print("\nEpisode with Highest Rating in Each Season:")
+print(highest_rating_episodes_info)
+
+print("\nEpisode with Lowest Rating in Each Season:")
+print(lowest_rating_episodes_info)
+
+print("\nSummary of Most Popular Episode in Each Season:")
+print(most_popular_episodes_summary)
