@@ -1,0 +1,38 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+csv_filename = "meteorite_data.csv"
+df = pd.read_csv(csv_filename)
+
+df['Year'] = pd.to_datetime(df['Year'], errors='coerce')
+
+earth_meteorites_before_2000 = df[df['Year'].dt.year < 2000]
+
+earth_meteorites_coordinates_before_1970 = df[(df['Year'].dt.year < 1970) & (df['Latitude'].notnull()) & (df['Longitude'].notnull())]
+
+earth_meteorites_mass_greater_than_10000kg = df[df['Mass (g)'] > 10000]
+
+plt.hist(df['Mass (g)'], bins=30, edgecolor='black')
+plt.xlabel('Mass (g)')
+plt.ylabel('Frequency')
+plt.title('Distribution of Earth Meteorites\' Mass')
+plt.show()
+plt.scatter(df['Longitude'], df['Latitude'], alpha=0.5)
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.title('Earth Meteorites\' Coordinates')
+plt.show()
+
+plt.scatter(earth_meteorites_coordinates_before_1970['Longitude'], earth_meteorites_coordinates_before_1970['Latitude'], alpha=0.5, color='r')
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.title('Earth Meteorites\' Coordinates Before 1970')
+plt.show()
+
+print("Earth Meteorites that Fell Before 2000:")
+print(earth_meteorites_before_2000)
+
+print("\nEarth Meteorites' Coordinates that Fell Before 1970:")
+print(earth_meteorites_coordinates_before_1970)
+
+print("\nEarth Meteorites with Mass Greater Than 10000 kg:")
+print(earth_meteorites_mass_greater_than_10000kg)
