@@ -1,0 +1,53 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+pokemon_data = pd.read_excel("pokemon_data.xlsx")
+spawn_rate_threshold = 5
+spawn_rate_less_than_threshold = pokemon_data[pokemon_data['Spawn Chance'] < spawn_rate_threshold]
+max_weaknesses = 4
+pokemon_less_than_max_weaknesses = pokemon_data[pokemon_data['Weaknesses'].str.count(',') + 1 < max_weaknesses]
+pokemon_without_multipliers = pokemon_data[pokemon_data['multipliers'].isna()]
+max_evolutions = 2
+pokemon_without_max_evolutions = pokemon_data[pokemon_data['Next Evolution'].str.count(',') + 1 <= max_evolutions]
+pokemon_data['Spawn Time (Seconds)'] = pokemon_data['Spawn Time'].apply(lambda x: int(x.split(':')[0]) * 60 + int(x.split(':')[1]))
+spawn_time_threshold = 300
+pokemon_with_spawn_time_less_than_threshold = pokemon_data[pokemon_data['Spawn Time (Seconds)'] < spawn_time_threshold]
+min_types_count = 2
+pokemon_with_more_than_min_types = pokemon_data[pokemon_data['Type'].str.count(',') + 1 > min_types_count]
+
+# Plotting the analysis
+
+plt.figure(figsize=(8, 6))
+plt.bar(spawn_rate_less_than_threshold['Name'], spawn_rate_less_than_threshold['Spawn Chance'])
+plt.xlabel('Pokémon')
+plt.ylabel('Spawn Rate')
+plt.title('Pokémons with Spawn Rate Less Than 5%')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(8, 6))
+plt.bar(pokemon_less_than_max_weaknesses['Name'], pokemon_less_than_max_weaknesses['Weaknesses'].str.count(',') + 1)
+plt.xlabel('Pokémon')
+plt.ylabel('Number of Weaknesses')
+plt.title('Pokémons with Less Than 4 Weaknesses')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(8, 6))
+plt.bar(pokemon_without_multipliers['Name'], [0] * len(pokemon_without_multipliers))
+plt.xlabel('Pokémon')
+plt.ylabel('No. of Multipliers')
+plt.title('Pokémons with No Multipliers')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(8, 6))
+plt.bar(pokemon_without_max_evolutions['Name'], pokemon_without_max_evolutions['Next Evolution'].str.count(',') + 1)
+plt.xlabel('Pokémon')
+plt.ylabel('Number of Evolutions')
+plt.title('Pokémons with No More Than 2 Evolutions')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()
