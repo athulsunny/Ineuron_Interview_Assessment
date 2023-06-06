@@ -1,0 +1,30 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+url = "https://data.wa.gov/api/views/f6w7-q2d2/rows.csv?accessType=DOWNLOAD"
+df = pd.read_csv(url)
+
+non_clean_cars = df[df['Clean Alternative Fuel Vehicle'] == 'No'][['Make', 'Vehicle Type']]
+tesla_bothell = df[(df['Make'] == 'TESLA') & (df['City'] == 'BOTHELL')][['Model Year', 'Model Type']]
+electric_cars = df[(df['Electric Range (FT1)'] > 100) & (df['Model Year'] > 2015)][['Make', 'Model Year', 'Model Type']]
+city_ev_type = df.groupby(['City', 'Electric Vehicle Type']).size().unstack().fillna(0)
+city_ev_type.plot(kind='bar', stacked=True)
+plt.xlabel('City')
+plt.ylabel('Count')
+plt.title('Distribution of Electric Vehicle Types by City')
+plt.legend(title='Electric Vehicle Type')
+plt.show()
+
+print("Cars and Types that Do Not Qualify for Clean Alternative Fuel Vehicle:")
+print(non_clean_cars)
+
+print("\nTESLA Cars with Model Year and Model Type Made in Bothell City:")
+print(tesla_bothell)
+
+print("\nCars with Electric Range > 100 and Made After 2015:")
+print(electric_cars)
+Footer
+© 2023 GitHub, Inc.
+Footer navigation
+
+    Terms
+    Pr
