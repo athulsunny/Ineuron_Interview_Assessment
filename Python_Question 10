@@ -1,0 +1,34 @@
+import nltk
+nltk.download('averaged_perceptron_tagger')
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.tag import pos_tag
+from collections import defaultdict
+
+def count_pos_tags(text):
+    words = word_tokenize(text)
+    tagged_words = pos_tag(words)
+    verb_count = 0
+    noun_count = 0
+    pronoun_count = 0
+    adjective_count = 0
+    for word, tag in tagged_words:
+        if tag.startswith('V'):  # Verb
+            verb_count += 1
+        elif tag.startswith('N'):  # Noun
+            noun_count += 1
+        elif tag == 'PRP' or tag == 'PRP$':  # Pronoun
+            pronoun_count += 1
+        elif tag.startswith('J'):  # Adjective
+            adjective_count += 1
+    pos_counts = defaultdict(int)
+    pos_counts['verbs'] = verb_count
+    pos_counts['nouns'] = noun_count
+    pos_counts['pronouns'] = pronoun_count
+    pos_counts['adjectives'] = adjective_count
+
+    return pos_counts
+
+phrase = "The quick brown fox jumps over the lazy dog."
+counts = count_pos_tags(phrase)
+print(counts)
